@@ -25,7 +25,7 @@ def filesize_to_string(filesize):
 	else:
 		return str(round(filesize/GB, 3)) + " Gb"
 
-"""
+"""\
 DownloadFileWindow
 
 +-------------------------------+
@@ -47,7 +47,7 @@ Keys:
 class FileDownloadWindow:
 
 	def __init__(self, parent, lock:Lock, keys):
-		"""
+		"""\
 		Args:
 		  parent: Underlying curses window
 		  lock:   Parent window lock
@@ -80,7 +80,7 @@ class FileDownloadWindow:
 
 
 	def select_file(self, files=[]):
-		"""
+		"""\
 		Ask user to enter save path
 		Args:
 		  files: A list of dictionaries.
@@ -126,7 +126,6 @@ class FileDownloadWindow:
 
 			self.__redraw()
 
-#		curses.curs_set(True)
 		return opt
 
 
@@ -142,13 +141,7 @@ class FileDownloadWindow:
 			self.W.addstr(1, 1, title+' '*(w-len(title)-2),
 				curses.A_REVERSE)
 
-#			self.__print_table_titles(3, w)
 			self.__print_file_table(h, w, 3)
-
-#			for y,f in enumerate(self.files[self.vy:]):
-#				if y > h-3: break
-
-#				self.__print_file(f, y+3, self.vy+y)
 
 			self.W.border()
 			self.W.refresh()
@@ -157,7 +150,6 @@ class FileDownloadWindow:
 
 
 	def __print_file_table(self, h, w, y):
-
 		# Table header
 		self.W.addstr(y, self.colx[0], "Filename",  curses.A_BOLD)
 		self.W.addstr(y, self.colx[1], "Size",      curses.A_BOLD)
@@ -173,7 +165,7 @@ class FileDownloadWindow:
 
 
 	def __print_file(self, file, y, index):
-
+		# Print single line
 		prefix = '  '
 		attr = 0
 
