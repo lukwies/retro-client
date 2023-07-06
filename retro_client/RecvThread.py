@@ -20,7 +20,7 @@ class RecvThread(threading.Thread):
 
 
 	def run(self):
-		"""
+		"""\
 		Run the receive thread.
 		To stop the thread set recvThread.done=True
 		and call recvThread.join().
@@ -35,7 +35,7 @@ class RecvThread(threading.Thread):
 				if not res: continue
 
 			except Exception as e:
-				self.gui.error("Recv: " + str(e))
+				self.gui.error(str(e))
 				break
 
 			msg_type = res['type']
@@ -64,7 +64,7 @@ class RecvThread(threading.Thread):
 
 
 	def __handle_chat_msg(self, msg):
-		"""
+		"""\
 		Called after message type 'message' or 'file-message'
 		received.
 		"""
@@ -104,7 +104,7 @@ class RecvThread(threading.Thread):
 
 
 	def __set_friend_status(self, msg):
-		"""
+		"""\
 		Handle received 'friend-status' message and set
 		the according friends status (ONLINE|OFFLINE).
 		This will update the sidebar window since it shows
@@ -112,13 +112,16 @@ class RecvThread(threading.Thread):
 		"""
 		status_str = msg['status']
 
+		if not msg['user']:
+			return
+
 		# Check if user is one of our friends.
 		friend = self.cli.account.get_friend_by_id(msg['user'])
 		if not friend:
 			self.gui.warn("Got status of unknown "\
 				"user '{}' ({})".format(msg['user'],
 				status_str))
-			return False
+			return
 
 		# Update friend status
 		if status_str == 'unknown':
