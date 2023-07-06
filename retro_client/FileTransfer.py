@@ -24,7 +24,7 @@ from . ui.FileDownloadWindow import filesize_to_string
 """
 
 class FileInfo:
-	"""
+	"""\
 	Temporary representation of file up/download
 	"""
 	def __init__(self, filepath, fileid=None,
@@ -49,12 +49,12 @@ class FileInfo:
 
 
 class FileTransfer:
-	"""
+	"""\
 	Handles all the file up/downloading.
 	"""
 
 	def __init__(self, gui):
-		"""
+		"""\
 		Args:
 		  gui: RetroGui
 		"""
@@ -66,7 +66,7 @@ class FileTransfer:
 
 
 	def upload_file(self, friend, filepath):
-		"""
+		"""\
 		Upload file to server and send 'file-message'
 		to receiver of file.
 
@@ -138,7 +138,7 @@ class FileTransfer:
 
 
 	def download_file(self, friend, fileid, filename, key):
-		"""
+		"""\
 		Download file from server, decrypt and store it.
 
 		Args:
@@ -211,9 +211,7 @@ class FileTransfer:
 
 
 	def __connect(self):
-		"""
-		Connect to fileserver.
-		"""
+		#Connect to fileserver.
 		cli = TLSClient(
 			self.conf.server_address,
 			self.conf.server_fileport,
@@ -235,7 +233,7 @@ class FileTransfer:
 		#   None: on error
 		try:
 			res = conn.recv_dict(['type'],
-				timeout_sec=self.conf.recv_timeout)
+				timeout_sec=10)
 			if not res:
 				self.gui.error("FileServer: "\
 					"receive timeout",
@@ -254,3 +252,4 @@ class FileTransfer:
 			self.gui.error("FileServer: " + str(e))
 
 		return None
+
