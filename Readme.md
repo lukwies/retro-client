@@ -58,9 +58,9 @@ structure:
  ~/.retro
     |__ config.txt		Config file
     |__ accounts/		All accounts stored here
-    |   |__ <user1>/		Account dir of 'user1'
+    |   |__ USER1/		Account dir of 'user1'
     |       |__ key.pem		User's private key
-    |       |__ <userid>.pem	User's public key
+    |       |__ USER1ID.pem	User's public key
     |       |__ friends/	To store friend keys
     |       |__ msg/		To store all conversations
     |__ res/			UI resources
@@ -80,13 +80,13 @@ and contains the following options:
 [default]
 loglevel  = ERROR|WARN|INFO|DEBUG
 logformat = '%(levelname)s  %(message)s'
-logfile   = <logfilepath>
+logfile   = LOGFILE_PATH
 recv_timeout = 5
 
 [server]
 address = 127.0.0.1
 port = 8443
 fileport = 8444
-certificate = <server certfile path>
-hostname = <server hostname>
+certificate = SERVER_CERTFILE_PATH
+hostname = SERVER_HOSNAME
 </pre>
