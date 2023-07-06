@@ -24,6 +24,19 @@ setup(
 			'retro-client=retro_client.main:main',
 		],
 	},
-
-	python_requires='>=3.6',
+	classifiers=[
+		"Development Status :: 3 - Alpha",
+		"Environment :: Console",
+		"Environment :: Console :: Curses",
+		"Intended Audience :: Developers",
+		"Intended Audience :: Education",
+		"Intended Audience :: End Users/Desktop",
+		"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+		"Operating System :: POSIX",
+		"Operating System :: POSIX :: Linux",
+		"Programming Language :: Python :: 3.11",
+		"Topic :: Communications",
+		"Topic :: Communications :: Chat",
+	]
 )
+
