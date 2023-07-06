@@ -5,7 +5,6 @@ from libretro.RetroClient import RetroClient
 
 from . ui.TextEditWindow import *
 from . ui.FileBrowseWindow import *
-from . ui.ConfirmWindow import *
 from . ui.FileDownloadWindow import *
 from . ui.TextWindow import *
 
