@@ -3,33 +3,24 @@ import curses
 from os import getcwd  as os_getcwd
 from os import listdir as os_listdir
 from os import stat    as os_stat
-
 from os.path import join     as path_join
 from os.path import dirname  as path_dirname
 from os.path import isdir    as path_isdir
 from os.path import splitext as path_splitext
-
 from threading import Lock
 
-"""
-Filebrowser
+from . FileDownloadWindow import filesize_to_string
 
-+-------------------------------+
-| Select a file			|
-+-------------------------------+
-| ../
-| foo.txt
-| bar
-| foobar.pdf
-|
-+-------------------------------
+
+"""\
+Popup window for selecting a file (path).
 """
 
 class FileBrowseWindow:
 
 	def __init__(self, parent, lock:Lock, keys,
 			title="Select a file ..."):
-		"""
+		"""\
 		Args:
 		  parent: Underlying curses window
 		  lock:   Window thread lock
@@ -62,7 +53,7 @@ class FileBrowseWindow:
 
 
 	def select_file(self, dirpath=None, allowed_ext=None):
-		"""
+		"""\
 		Run the select file loop.
 		If no dirpath is given, PWD is used instead.
 		Args:
