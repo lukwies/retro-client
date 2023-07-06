@@ -1,0 +1,51 @@
+ Retro is an end-to-end encrytped messenger for true
+ terminal lovers <3.
+
+ __**Keys**__
+
+ **UP**          Select previous friend
+ **DOWN**        Select next friend
+ **ENTER**       Open Conversation with selected friend
+
+ **PAGE-UP**     Scroll log window up
+ **PAGE-DOWN**   Scroll log window down
+
+ **CTRL+F**      Add new friend to account
+ **CTRL+R**      Try to reconnect to server
+ **CTRL+X**      Close retro chat
+ **CTRL+H**      Show this helpview
+
+ ~~TODO~~
+ **CTRL+A**      Create new retro account
+ **CTRL+O**      Switch to other account
+
+ __**Info**__
+ 
+ All retro settings and account information is located
+ at ~/.retro. That directory has the following structure:
+
+  ~/.retro/
+     |-- config.txt
+     |
+     |-- accounts/
+     |   |-- <user1>/
+     |   |   |-- key.pem
+     |   |   |-- <userid>.pem
+     |   |   |-- friends/
+     |   |   |   |-- friendid1.pem
+     |   |   |   |-- friendid2.pem
+     |   |   |   |-- ...
+     |   |   |-- msg/
+     |   |       |-- friendid1.db
+     |   |       |-- friendid2.db
+     |   |       |-- ...
+     |   |-- <user2>/
+     |       |-- ...
+     |
+     |-- res/
+     |   |-- help/
+     |   |   |-- main.txt
+     |   |   |-- chat.txt
+     |   |-- keyboard.json
+     |
+     |-- server-cert.pem
