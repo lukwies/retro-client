@@ -11,7 +11,7 @@ setup(
 	author_email='luken@gmx.net',
 	license='GPLv3+',
 
-	packages=['retro_client'],
+	packages=find_packages(),
 
 	install_requires=[
 		'libretro',
