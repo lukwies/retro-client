@@ -265,7 +265,7 @@ class RetroGui:
 			self.cli.connect()
 			self.connected = True
 			self.info("We are connected :-)")
-			self.debug("SSL: ".format(self.cli.conn.cipher()))
+			#self.debug("SSL: ".format(self.cli.conn.cipher()))
 		except Exception as e:
 			self.error(str(e))
 			self.connected = False
