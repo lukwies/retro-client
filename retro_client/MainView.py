@@ -1,7 +1,11 @@
 import curses
 import time
-import logging as LOG
+import logging
 import textwrap
+
+
+LOG = logging.getLogger(__name__)
+
 
 """\
  ___ ___ ___ ___ ____
@@ -31,21 +35,21 @@ class MainView:
 
 
 	def add_msg(self, level, msg, redraw=True):
-		"""
+		"""\
 		Add log message to mainview scroll text box.
 		By default this will redraw the mainview if
 		the chatview isn't opened.
 
 		Args:
-		  level:  Loglevel (LOG.ERROR, ...)
+		  level:  Loglevel (logging.ERROR, ...)
 		  msg:    Log message
 		  redraw: Redraw mainview (if enabled) ?
 		"""
 		attrs = {
-			LOG.ERROR   : self.gui.colors['r'],
-			LOG.WARNING : self.gui.colors['y'],
-			LOG.INFO    : 0,
-			LOG.DEBUG   : 0 }
+			logging.ERROR   : self.gui.colors['r'],
+			logging.WARNING : self.gui.colors['y'],
+			logging.INFO    : 0,
+			logging.DEBUG   : 0 }
 
 		attr  = 0
 		if level in attrs:
@@ -78,16 +82,15 @@ class MainView:
 			self.changed = True
 
 
-	def redraw(self):
-		"""
+	def redraw(self, force_redraw=False):
+		"""\
 		Redraw if changed.
 		"""
 
-		if not self.changed:
+		if not self.changed and not force_redraw:
 			return
 
-		self.gui.winLock.acquire()
-		try:
+		with self.gui.winLock:
 			h,w = self.W.getmaxyx()
 
 			# Draw the logo and welcome message always
@@ -105,10 +108,7 @@ class MainView:
 
 			self.W.border()
 			self.W.refresh()
-		finally:
-			self.gui.winLock.release()
-
-		self.changed = False
+			self.changed = False
 
 
 	def __print_line(self, y, line):

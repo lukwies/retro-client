@@ -22,7 +22,7 @@ drawn at the left side of the screen.
 class FriendsWindow:
 
 	def __init__(self, gui):
-		"""
+		"""\
 		Init friends list view inside gui.W['left'] window.
 		Args:
 		  gui:      RetroGui instance
@@ -39,7 +39,7 @@ class FriendsWindow:
 
 
 	def reset_friends(self):
-		"""
+		"""\
 		Reset the friends list, the selected friend and
 		the viewport.
 		"""
@@ -54,7 +54,7 @@ class FriendsWindow:
 
 
 	def get_selected(self):
-		"""
+		"""\
 		Return name of selected friend or None
 		if nothing is selected.
 		"""
@@ -65,6 +65,11 @@ class FriendsWindow:
 
 
 	def handle_event(self, ch):
+		"""\
+		Handle the keyevents 'UP' and 'DOWN' and
+		select the previous or next friend within
+		the friend list.
+		"""
 		if self.cy == None:
 			return
 
@@ -80,10 +85,12 @@ class FriendsWindow:
 				self.changed = True
 
 
-	def redraw(self):
-		# Threadsafe
+	def redraw(self, force_redraw=False):
+		"""\
+		Redraw the friendlist window.
+		"""
 
-		if not self.changed:
+		if not self.changed and not force_redraw:
 			return
 
 		# We sort friends by 'status' to have first the online
@@ -114,7 +121,7 @@ class FriendsWindow:
 
 
 	def __print_friendlist(self, h, w, y):
-		"""
+		"""\
 		Print the friendlist.
 		"""
 

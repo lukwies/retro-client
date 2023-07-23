@@ -1,5 +1,7 @@
 import curses
 import json
+import logging as LOG
+
 
 """\
 This class handles keyboard keys/shortcuts required by retro.
@@ -48,7 +50,20 @@ class Keyboard:
 			else None
 
 
-	def load_json(self, path):
+	def load_config(self, path):
+		"""\
+		Load keys from json file.
+		"""
+		try:
+			LOG.debug("Keyboard: Loading config "+path)
+			dct = json.load(open(path, "r"))
+			self.keys = dct
+		except Exception as e:
+			raise Exception(
+				"Keyboard.load_config:"\
+				" "+str(e))
+
+	def save_config(self, path):
 		"""\
 		Load keys from json file.
 		"""

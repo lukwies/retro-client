@@ -217,3 +217,8 @@ class FileDownloadWindow:
 		]
 
 
+	def __del__(self):
+		"""\
+		Make sure window is deleted properly.
+		"""
+		del self.W

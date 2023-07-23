@@ -16,10 +16,11 @@ SelectOptionWindow.
 +-------------------------------+
 | Headline			|
 +-------------------------------+
-| <option1>
-| <option2>
-| <option3>
-| ...
+| [ ] Chat messages
+| [ ] File message
+| [x] Incomoing calls
+| [ ] Friend online
+| [ ] Friend offline
 +-------------------------------
 
 Keys:

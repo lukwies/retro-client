@@ -2,7 +2,7 @@ import curses
 import threading
 
 
-"""
+"""\
 Entrybox
 
 +-------------------------------+
@@ -18,7 +18,7 @@ class EntryBoxWindow:
 			keys, title="Enter",
 			is_password=False,
 			password_replace_char=''):
-		"""
+		"""\
 		Args:
 		  parent: Underlying curses window
 		  lock:   Lock for parent window
@@ -50,7 +50,7 @@ class EntryBoxWindow:
 
 
 	def get_input(self):
-		"""
+		"""\
 		Asks user to confirm quesion.
 		Return: True or False
 		"""
@@ -112,3 +112,9 @@ class EntryBoxWindow:
 		finally:
 			self.lock.release()
 
+
+	def __del__(self):
+		"""\
+		Make sure window is deleted properly.
+		"""
+		del self.W

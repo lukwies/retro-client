@@ -1,17 +1,20 @@
 import sys
-import logging as LOG
+import logging
+
 from os.path import join as path_join
 from os.path import exists as path_exists
+from os.path import expanduser as path_expndusr
 from getpass import getpass
-from getopt import getopt, GetoptError
+from getopt  import getopt, GetoptError
 
 from libretro.RetroClient import *
-from libretro.Account import create_new_account, chose_account_name
+from libretro.Account import chose_account_name
+from libretro.AccountCreator import AccountCreator
+
 from . ui.Keyboard import *
-
-
 from . RetroGui import RetroGui
 
+LOG = logging.getLogger(__name__)
 
 HELP="""\
   retro-client
@@ -25,7 +28,7 @@ HELP="""\
 
   -u, --user=NAME		Set username
 
-  --create-account		Create new retro account
+  --create-account=REGKEYFILE	Create new retro account
   --init-keyboard		Initialize keyboard keys/shortcuts
 """
 
@@ -56,7 +59,7 @@ def main():
 
 	try:
 		opts,rem = getopt(argv, 'hu:',
-			['help', 'user=', 'create-account',
+			['help', 'user=', 'create-account=',
 			 'init-keyboard'])
 
 	except GetoptError as ge:
@@ -74,7 +77,8 @@ def main():
 
 		elif opt == '--create-account':
 			# Create a new retro account
-			return create_new_account()
+			AccountCreator().create_account(arg)
+			return True
 
 		elif opt == '--init-keyboard':
 			# Init keyboard
@@ -95,14 +99,18 @@ def main():
 	passw = getpass("Password for '{}': ".format(user))
 
 
-	# Load user account
-	if not client.load(user, passw):
+	# Init gui and run
+	gui = RetroGui()
+
+	try:
+		gui.load(user, passw)
+	except Exception as e:
+		print(e)
 		return False
 
-	# Init gui and run
-	gui = RetroGui(client)
 	gui.run()
 
+	return True
 
 
 if __name__ == '__main__':

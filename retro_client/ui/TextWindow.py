@@ -3,7 +3,7 @@ from threading import Lock
 import textwrap
 
 
-"""
+"""\
 HelpWindow
 
 Load a textfile and renders a scrolled text window
@@ -18,7 +18,7 @@ Keys:
 
 class TextWindow:
 	def __init__(self, parent, lock:Lock, keys, title="Help"):
-		"""
+		"""\
 		Args:
 		  parent: Underlying curses window
 		  lock:   Window lock
@@ -45,7 +45,7 @@ class TextWindow:
 
 
 	def read_textfile(self, path):
-		"""
+		"""\
 		Converts content of given path's file to
 		a list of lines (self.lines)
 		"""
@@ -63,9 +63,10 @@ class TextWindow:
 		return True
 
 
-
 	def show(self):
-
+		"""\
+		Show text window.
+		"""
 		curses.curs_set(False)
 		while True:
 			self.__redraw()
@@ -127,7 +128,7 @@ class TextWindow:
 
 
 	def __print_line(self, y, x, line, attr=0):
-		"""
+		"""\
 		Print text to given window at y/x position.
 		This supports the following expression for styled
 		text ouput:
@@ -178,3 +179,10 @@ class TextWindow:
 				self.W.addch(ch, attr)
 				i += 1
 		return attr
+
+
+	def __del__(self):
+		"""\
+		Make sure window is deleted properly.
+		"""
+		del self.W

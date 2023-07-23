@@ -1,17 +1,20 @@
-import logging as LOG
+import logging
 
 from os      import stat     as os_stat
 from os.path import join     as path_join
 from os.path import basename as path_basename
 from base64  import b64encode,b64decode
 
+from libretro.protocol import *
 from libretro.Config import RETRO_MAX_FILESIZE
-from libretro.net    import TLSClient
+from libretro.net    import NetClient
 from libretro.crypto import hash_sha256, random_buffer
 from libretro.crypto import aes_encrypt_from_file
 from libretro.crypto import aes_decrypt_to_file
 
 from . ui.FileDownloadWindow import filesize_to_string
+
+LOG = logging.getLogger(__name__)
 
 """\
 1) Get filepath
@@ -29,6 +32,11 @@ class FileInfo:
 	"""
 	def __init__(self, filepath, fileid=None,
 			filesize=0):
+		"""\
+		filepath: Path to file
+		fileid:   16 byte file id
+		filesize: Size of file
+		"""
 		self.filepath = filepath
 		self.filename = path_basename(filepath)
 		self.fileid   = fileid
@@ -36,14 +44,14 @@ class FileInfo:
 		if not self.fileid:
 			# Generate fileid if not given
 			idbuf = self.filename.encode()+random_buffer(16)
-			self.fileid = hash_sha256(idbuf,True)[:32]
+			self.fileid = hash_sha256(idbuf)[:Proto.FILEID_SIZE]
 
 
 	def get_size(self):
 		try:
 			return os_stat(self.filepath).st_size
 		except Exception as e:
-			LOG.error("FileInfo.get_size('{}'): {}"\
+			LOG.error("get_size('{}'): {}"\
 				.format(self.filepath, e))
 			return 0
 
@@ -96,9 +104,9 @@ class FileTransfer:
 		if not conn: return
 
 		# Send initial packet (fileid and filesize)
-		conn.send_dict({'type'   : 'file-upload',
-				'fileid' : file.fileid,
-				'size'   : len(data) })
+		conn.send_packet(Proto.T_FILE_UPLOAD,
+				file.fileid,
+				struct.pack('!I', len(data)))
 
 		if not self.__recv_ok(conn):
 			return
@@ -112,14 +120,14 @@ class FileTransfer:
 
 		# Send file-message to user
 		file_dict = {
-			'fileid'   : file.fileid,
+			'fileid'   : file.fileid.hex(),
 			'filename' : file.filename,
 			'key'      : b64encode(key).decode(),
 			'size'     : filesize
 		}
-		msg,e2e_msg = self.cli.msgHandler.make_file_msg(
-				friend,	file_dict)
-		self.cli.send_dict(e2e_msg)
+		msg,e2e_buffer = self.cli.msgHandler.make_file_msg(
+					friend,	file_dict)
+		self.cli.send_packet(Proto.T_FILEMSG, e2e_buffer)
 
 		self.gui.info("Sent 'file-message' to '"\
 			+friend.name+"'")
@@ -143,7 +151,7 @@ class FileTransfer:
 
 		Args:
 		  friend:   Sender Friend object
-		  fileid:   Fileid
+		  fileid:   Fileid (16 byte)
 		  filename: Filename (not path!)
 		  key:      Encryption key (base64)
 		NOTE: This is a thread function !!!
@@ -156,16 +164,15 @@ class FileTransfer:
 		if not conn: return
 
 		# Send initial packet
-		conn.send_dict({'type'   : 'file-download',
-				'fileid' : fileid })
+		conn.send_packet(Proto.T_FILE_DOWNLOAD, fileid)
 
-		# Must receive type=='ok' and 'size'
-		res = self.__recv_ok(conn)
-		if not res:
+		# Must receive T_SUCCESS and filesize
+		pckt = self.__recv_ok(conn)
+		if not pckt:
 			conn.close()
 			return
 
-		filesize = res['size']
+		filesize = struct.unpack('!I', pckt[1])[0]
 		data     = b''
 		nrecv    = 0
 
@@ -201,7 +208,7 @@ class FileTransfer:
 			on_logwin=True)
 
 		# Set file to downloaded=1 in message store
-		self.msgStore.set_file_downloaded(friend, fileid)
+		self.msgStore.set_file_downloaded(friend, fileid.hex())
 
 		# Reload chatview
 		if self.gui.chatView:
@@ -212,7 +219,7 @@ class FileTransfer:
 
 	def __connect(self):
 		#Connect to fileserver.
-		cli = TLSClient(
+		cli = NetClient(
 			self.conf.server_address,
 			self.conf.server_fileport,
 			self.conf.server_hostname,
@@ -232,22 +239,24 @@ class FileTransfer:
 		#   msg: Received packet on success
 		#   None: on error
 		try:
-			res = conn.recv_dict(['type'],
-				timeout_sec=10)
-			if not res:
+			pckt = conn.recv_packet(timeout_sec=10)
+			if not pckt:
 				self.gui.error("FileServer: "\
 					"receive timeout",
 					on_logwin=True)
-			elif res['type'] == 'error':
-				self.gui.error("FileServer: "\
-					+ res['msg'], on_logwin=True)
-			elif res['type'] != 'ok':
+
+			elif pckt[0] == Proto.T_ERROR:
+				self.gui.error("Fileserver: "\
+					+ pckt[1].decode(),
+					on_logwin=True)
+
+			elif pckt[0] != Proto.T_SUCCESS:
 				self.gui.error("FileTransfer: "\
-					"Invalid response type '"\
-					+ res['type'] + "'",
-					on_lowin=True)
+					"Invalid response type: {}"\
+					.format(pckt[0]),
+					on_logwin=True)
 			else:
-				return res
+				return pckt
 		except Exception as e:
 			self.gui.error("FileServer: " + str(e))
 

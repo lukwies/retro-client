@@ -41,6 +41,10 @@ class TextEditWindow:
 
 
 	def getch(self):
+		"""\
+		Key key from this window at current
+		cursor position.
+		"""
 		cy = self.cy-self.vy
 		cx = self.cx
 		if self.border:
@@ -52,7 +56,7 @@ class TextEditWindow:
 
 
 	def handle_event(self, ch):
-		"""
+		"""\
 		Handle key event.
 		"""
 		if ch >= ord(' ') and ch <= ord('~'):
@@ -80,14 +84,14 @@ class TextEditWindow:
 
 
 	def get_text(self):
-		"""
+		"""\
 		Get text.
 		"""
 		return "\n".join(self.lines).strip()
 
 
 	def clear(self, clear_border=True):
-		"""
+		"""\
 		Clear window and erase lines.
 		"""
 		self.lines  = ['']
@@ -108,7 +112,7 @@ class TextEditWindow:
 
 
 	def redraw(self):
-		"""
+		"""\
 		Render text.
 		"""
 		h,w = self.W.getmaxyx()
@@ -147,7 +151,7 @@ class TextEditWindow:
 
 
 	def update_cursor(self):
-		"""
+		"""\
 		Updates the cursor position to self.cy/self.cx.
 		"""
 		self.W.move(self.cy-self.vy+2, self.cx+1)
@@ -156,7 +160,7 @@ class TextEditWindow:
 
 	# ------------------------------------------------------------
 	def __add_char(self, ch):
-		"""
+		"""\
 		Add a character to the text.
 		"""
 		_,w = self.W.getmaxyx()
@@ -210,7 +214,7 @@ class TextEditWindow:
 
 
 	def __move_cursor(self, direction=0):
-		"""
+		"""\
 		Move cursor.
 		Args:
 		  direction: 0=up, 1=right, 2=down, 3=left
@@ -250,7 +254,7 @@ class TextEditWindow:
 
 
 	def __adjust_view(self):
-		"""
+		"""\
 		Adjust the view y position that cursor
 		is always in viewport bounds.
 		"""

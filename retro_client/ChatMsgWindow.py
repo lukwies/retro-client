@@ -2,6 +2,8 @@ import curses
 import textwrap
 import time
 
+
+from libretro.protocol import Proto
 from . ui.FileDownloadWindow import filesize_to_string
 
 """\
@@ -36,6 +38,7 @@ starts with:
 
 A dimmed line starts with:
 	/D/D/D
+
 
 """
 
@@ -79,7 +82,7 @@ class ChatMsgWindow:
 
 
 	def add_msg(self, msg):
-		"""
+		"""\
 		Add message to line list.
 		If message is unseen and self.num_unseen == 0, we add the
 		string "/U/U/U" to the line list to mark the beginning of
@@ -107,7 +110,7 @@ class ChatMsgWindow:
 				msg['from'],
 				fmt_time(msg['time']) ))
 
-		if msg['type'] == 'file-message':
+		if msg['type'] == Proto.T_FILEMSG:
 			# File message
 			# TODO What happens if filename too long?
 			ssize = filesize_to_string(msg['size'])
@@ -120,14 +123,13 @@ class ChatMsgWindow:
 		else:
 			# Message
 			self.__add_wrap_text(msg['msg'])
-#			self.lines += self.tw.wrap(msg['msg'])
 
 		self.lines.append("")
 		self.num_msgs += 1
 
 
 	def set_msgs(self, msgs=[]):
-		"""
+		"""\
 		Set chat messages.
 		"""
 		self.num_msgs   = 0
@@ -141,7 +143,7 @@ class ChatMsgWindow:
 
 
 	def reset_view(self):
-		"""
+		"""\
 		Set view point that latest message can be seen.
 		"""
 		h,_ = self.gui.W['main'].getmaxyx()
@@ -164,13 +166,13 @@ class ChatMsgWindow:
 			self.changed = True
 
 
-	def redraw(self):
-		"""
+	def redraw(self, force_redraw=False):
+		"""\
 		Redraw window
 
 		Locks: self.gui.winLock
 		"""
-		if not self.changed:
+		if not self.changed and not force_redraw:
 			return
 
 		self.gui.winLock.acquire()
@@ -209,7 +211,7 @@ class ChatMsgWindow:
 
 
 	def remove_unseen_marker(self):
-		"""
+		"""\
 		Remove line "/U/U/U" and the trailing one from self.lines.
 		"""
 		while True:
@@ -289,7 +291,7 @@ class ChatMsgWindow:
 
 
 	def __print_msg(self, y, line):
-		"""
+		"""\
 		Print message line to chat msg window.
 		This supports the following expression for styled
 		text ouput:

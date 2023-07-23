@@ -242,3 +242,10 @@ class FileBrowseWindow:
 		if not ext or ext not in extensions:
 			return False
 		return True
+
+
+	def __del__(self):
+		"""\
+		Make sure window is deleted properly.
+		"""
+		del self.W
