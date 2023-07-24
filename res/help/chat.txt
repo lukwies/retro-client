@@ -11,9 +11,3 @@
  **PAGE+DOWN**          Scroll messages down
 
 
- **/delete-messges**    Delete all stored messages for this
-                    conversation.
- **/search <pattern>**  Search for a pattern in all stored
-                    messages.
- **/export <path>**     Export all messages to an unencrypted
-                    text file.

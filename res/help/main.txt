@@ -10,14 +10,18 @@
  **PAGE-UP**     Scroll log window up
  **PAGE-DOWN**   Scroll log window down
 
- **CTRL+F**      Add new friend to account
- **CTRL+R**      Try to reconnect to server
- **CTRL+X**      Close retro chat
  **CTRL+H**      Show this helpview
+ **CTRL+G**      Show settings
+ **CTRL+R**      Connect to server
+ **CTRL+F**      Add new friend to account
+ **CTRL+D**      Delete selected friend (forever)
+ **CTRL+X**      Close retro chat
 
- ~~TODO~~
- **CTRL+A**      Create new retro account
- **CTRL+O**      Switch to other account
+ **CTRL+P**      Call currently selected friend or accept
+             incoming call.
+ **CTRL+O**      Reject incoming, stop outgoing or hangup 
+             active call.
+
 
  __**Info**__
  
