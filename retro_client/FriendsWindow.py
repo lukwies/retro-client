@@ -43,10 +43,11 @@ class FriendsWindow:
 		Reset the friends list, the selected friend and
 		the viewport.
 		"""
-		self.friends = list(self.account.friends.values())
-		self.cy = 0 if len(self.friends) > 0 else None
-		self.vy = self.cy
-		self.changed = True
+		if self.account and self.account.friends:
+			self.friends = list(self.account.friends.values())
+			self.cy = 0 if len(self.friends) > 0 else None
+			self.vy = self.cy
+			self.changed = True
 
 
 	def getch(self):
