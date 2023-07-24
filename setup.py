@@ -15,6 +15,8 @@ setup(
 
 	install_requires=[
 		'libretro',
+		'pyaudio',
+		'plyer'
 	],
 
 	# Create a globally accessable console script
