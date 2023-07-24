@@ -102,13 +102,8 @@ def main():
 	# Init gui and run
 	gui = RetroGui()
 
-	try:
-		gui.load(user, passw)
-	except Exception as e:
-		print(e)
-		return False
-
-	gui.run()
+	if gui.load(user, passw):
+		gui.run()
 
 	return True
 
