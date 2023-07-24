@@ -1,5 +1,8 @@
-# Retro
+# retro-client
 An end-to-end ecrytped messenger for terminal lovers (me and my friends <3).
+**NOTE**: retro-client depends on 
+<a href='https://github.com/lukwies/libretro'>libretro</a>
+, so build this first!
 
 ## Features
 - Transport layer security (TLS)
@@ -42,12 +45,12 @@ $ retro-client
 
  Usage: retro-client [OPTIONS] ...
 
- -u, --user=USER	Set username
+ -u, --user=USER           Set username
 
- --init-keyboard        Ask user to type all keys required by retro
-			in an interactive curses window. These keys
-			then stored at ~/.retro/res/keyboard.json.
- --create-account	Create a new retro account
+ --init-keyboard           Ask user to type all keys required by retro
+                           in an interactive curses window. These keys
+                           then stored at ~/.retro/res/keyboard.json.
+ --create-account=REGKEY   Create a new retro account
 </pre>
 
 
@@ -56,19 +59,22 @@ The retro basedirectory is located at `~/.retro` and has the following
 structure:
 <pre>
  ~/.retro
-    |__ config.txt		Config file
-    |__ accounts/		All accounts stored here
-    |   |__ USER1/		Account dir of 'user1'
-    |       |__ key.pem		User's private key
-    |       |__ USER1ID.pem	User's public key
-    |       |__ friends/	To store friend keys
-    |       |__ msg/		To store all conversations
-    |__ res/			UI resources
-    |   |__ keyboard.json	Keyboard keys/shortcuts settings
-    |   |__ help/		Helpfiles
-    |       |__ main.txt	Help for mainview
-    |       |__ chat.txt	Help for chatview
-    |__ server-cert.pem		Server certificate
+    |__ config.txt              Config file
+    |__ accounts/               All accounts stored here
+    |   |__ {username}/         Account dir of 'user1'
+    |       |__ key.pem	        User's private key
+    |       |__ {userid}.pem    User's public key
+    |       |__ friends/        To store friend keys
+    |       |__ msg/            To store all conversations
+    |__ res/                    UI resources
+    |   |__ keyboard.json       Keyboard keys/shortcuts settings
+    |   |__ help/               Helpfiles
+    |   |   |__ main.txt        Help for mainview
+    |   |   |__ chat.txt        Help for chatview
+    |   |__ img/                Images
+    |   |__ sounds/             Soundfiles
+    |   |__ ui.conf             User interface config
+    |__ server-cert.pem         Server certificate
 </pre>
 
 
@@ -87,6 +93,7 @@ recv_timeout = 5
 address = 127.0.0.1
 port = 8443
 fileport = 8444
+audioport = 8445
 certificate = SERVER_CERTFILE_PATH
 hostname = SERVER_HOSNAME
 </pre>
