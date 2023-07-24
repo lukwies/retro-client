@@ -266,7 +266,7 @@ class RetroGui:
 			self.audioCallWindow.redraw(force)
 
 
-	def log_msg(self, text, error=False, show_sec=5):
+	def log_msg(self, text, error=False, show_sec=2):
 		"""\
 		Write message to self.W['log'].
 		"""
@@ -622,6 +622,7 @@ class RetroGui:
 		init_color('Wb', 12, curses.COLOR_WHITE, curses.COLOR_BLUE)
 		init_color('Bb', 13, curses.COLOR_BLACK, curses.COLOR_BLUE)
 		init_color('Wr', 14, curses.COLOR_WHITE, curses.COLOR_RED)
+		init_color('BW', 15, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
 
 		h,w = self.stdscr.getmaxyx()
@@ -699,7 +700,7 @@ class LogMsgThread(threading.Thread):
 	Print a logging message with timeout.
 	"""
 	def __init__(self, gui, msg, is_error=False,
-			show_sec=5):
+			show_sec=3):
 		super().__init__()
 		self.gui = gui		# RetroGui
 		self.msg = msg		# Text
@@ -712,6 +713,9 @@ class LogMsgThread(threading.Thread):
 		self.__print_msg(win)
 		time_sleep(self.sec)
 		self.__clear(win)
+
+		if self.gui.chatView:
+			self.gui.chatView.reset_cursor()
 
 	def __print_msg(self, win):
 		with self.gui.winLock:
