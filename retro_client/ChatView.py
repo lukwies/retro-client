@@ -204,6 +204,10 @@ class ChatView:
 		self.wIn.redraw()
 		self.gui.audioCallWindow.redraw(force_redraw)
 
+	def reset_cursor(self):
+		""" Reset text edit cursor """
+		self.wIn.update_cursor()
+
 
 	def add_msg(self, msg):
 		"""\
