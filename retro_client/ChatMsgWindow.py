@@ -40,6 +40,8 @@ A dimmed line starts with:
 	/D/D/D
 
 
+Date
+ Mo, 2. july 20:21
 """
 
 class ChatMsgWindow:
@@ -161,7 +163,7 @@ class ChatMsgWindow:
 
 	def scroll_down(self):
 		""" Scroll down """
-		if self.cy < len(self.lines):
+		if self.cy < len(self.lines)-1:
 			self.cy += 1
 			self.changed = True
 
@@ -199,6 +201,7 @@ class ChatMsgWindow:
 						self.__print_msg(y, line)
 					y += 1
 
+				self.__draw_scrollbar(2, w-2, h-3)
 				self.W.border()
 			except:
 				# Screen too small
@@ -329,3 +332,35 @@ class ChatMsgWindow:
 			else:
 				self.W.addch(ch, attr)
 				i += 1
+
+	def __draw_scrollbar(self, y, x, h):
+
+		bar_y = int(self.cy * ((h-1) / len(self.lines)))
+
+		self.W.addch(y, x, curses.ACS_UARROW, curses.A_BOLD)
+		self.W.addch(y+1+bar_y, x, curses.ACS_BLOCK, curses.A_DIM)
+#' ', curses.A_REVERSE)
+		self.W.addch(y+h-1, x, curses.ACS_DARROW, curses.A_BOLD)
+"""
+
+-
+|
+|
+| h
+|
+|
+-
+
+
+
+
+
+
+
+
+"""
+
+
+
+
+
