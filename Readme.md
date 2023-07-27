@@ -59,22 +59,36 @@ The retro basedirectory is located at `~/.retro` and has the following
 structure:
 <pre>
  ~/.retro
-    |__ config.txt              Config file
-    |__ accounts/               All accounts stored here
-    |   |__ {username}/         Account dir of 'user1'
-    |       |__ key.pem	        User's private key
-    |       |__ {userid}.pem    User's public key
-    |       |__ friends/        To store friend keys
-    |       |__ msg/            To store all conversations
-    |__ res/                    UI resources
-    |   |__ keyboard.json       Keyboard keys/shortcuts settings
-    |   |__ help/               Helpfiles
-    |   |   |__ main.txt        Help for mainview
-    |   |   |__ chat.txt        Help for chatview
-    |   |__ img/                Images
-    |   |__ sounds/             Soundfiles
-    |   |__ ui.conf             User interface config
-    |__ server-cert.pem         Server certificate
+    |__ config.txt                    Config file
+    |__ accounts/                     All accounts stored here
+    |   |__ {username}/               Account dir of 'user1'
+    |       |__ key.pem               User's private key
+    |       |__ {userid}.pem          User's public key
+    |       |__ friends/              To store friend keys
+    |       |__ msg/                  To store all conversations
+    |__ bots/                         All bot accounts stored here
+    |   |__ ...                       Same structure as 'accounts'
+    |__ res/                          UI resources
+    |   |__ keyboard.json             Keyboard keys/shortcuts settings
+    |   |__ help/                     Helpfiles
+    |   |   |__ main.txt              Help for mainview
+    |   |   |__ chat.txt              Help for chatview
+    |   |__ img/                      Images for desktop notifications
+    |   |   |__ recv-message.png
+    |   |   |__ incoming-call.png
+    |   |   |__ friend-online.png
+    |   |   |__ friend-offline.png
+    |   |__ sounds/                   Sounds for special events
+    |   |   |__ recv-message.wav
+    |   |   |__ sent-message.wav
+    |   |   |__ recv-filemessage.wav
+    |   |   |__ sent-filemessage.wav
+    |   |   |__ incoming-call.wav
+    |   |   |__ outgoing-call.wav
+    |   |   |__ friend-online.wav
+    |   |   |__ friend-offline.wav
+    |   |__ ui.conf                   User interface config
+    |__ server-cert.pem               Server certificate
 </pre>
 
 
@@ -85,7 +99,6 @@ and contains the following options:
 <pre>
 [default]
 loglevel  = ERROR|WARN|INFO|DEBUG
-logformat = '%(levelname)s  %(message)s'
 logfile   = LOGFILE_PATH
 recv_timeout = 5
 
@@ -96,4 +109,21 @@ fileport = 8444
 audioport = 8445
 certificate = SERVER_CERTFILE_PATH
 hostname = SERVER_HOSNAME
+</pre>
+
+## UI Config File
+The userinterface config file is located at `~/.retro/res/ui.conf`
+and contains the following options:
+<pre>
+[sounds]
+recv-message = True
+sent-message = True
+incoming-call = True
+outgoing-call = True
+friend-online = True
+friend-offline = True
+
+[notify]
+enabled = True
+timeout = 5
 </pre>
