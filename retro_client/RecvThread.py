@@ -139,14 +139,13 @@ class RecvThread(threading.Thread):
 		the message database and refresh the ui.
 		"""
 		if not pckt[1]:
-			LOG.error("__handle_chat_msg: No payload!")
+			LOG.error("handle_chat_msg: No payload!")
 			return False
 
 		try:
 			friend,msg = self.msgHandler.decrypt_msg(pckt[0],pckt[1])
 		except Exception as e:
 			self.gui.error("MsgHandler: "+str(e))
-			self.gui.error(pckt[1].hex())
 			return False
 
 		# Store message to sqlite db. Set unseen=1.

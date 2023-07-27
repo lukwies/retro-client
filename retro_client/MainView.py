@@ -98,7 +98,7 @@ class MainView:
 			self.__print_logo(h, w)
 
 			# Draw the scroll text (self.lines).
-			y = 9
+			y    = 9
 			boxh = h-y-1
 
 			for boxy,line in enumerate(self.lines[self.cy:]):
