@@ -3,96 +3,116 @@
 # |_/ |_   |  |_/ |  |
 # | \ |___ |  | \ |__|
 #
-# Creates the retro client directory tree at ~/.retro
+# Creates the basic retro client directory tree.
 #
 # ~/.retro/
 #    |__ accounts/
+#    |__ bots/
 #    |__ config.txt
 #    |__ res/
-#    |   |__ help/
-#    |       |__ chat.txt
-#    |       |__ main.txt
-#    |__ server-cert.pem
+#        |__ help/
+#            |__ chat.txt
+#            |__ main.txt
 #
-base=$HOME/.retro
+# Usage: ./install.sh (BASEDIR)
+#
+#
+
+default_server_addr="127.0.0.1"
+default_server_port=8443
+default_file_server_port=8444
+default_audio_server_port=8445
+default_server_hostname="example.org"
 
 
+# If an argument is given, handle it as the base
+# directory path, otherwise use ~/.retro.
+if [ "$1" ]; then
+	base=$1
+else
+	base=$HOME/.retro
+fi
+
+# Loggin functions
+function info() { echo -e "[\033[32minfo\033[0m]" $@; }
 function ok()   { echo -e "[ \033[32mok\033[0m ]" $@; }
 function fail() { echo -e "[\033[31mfail\033[0m]" $@; }
+function warn() { echo -e "[\033[33mwarn\033[0m]" $@; }
 
 
 function exec_cmd() {
 	# Executes given command and prints a success or
 	# error message. Terminates if failed to run cmd.
-	if $@ > /dev/null 2>&1; then
-		ok "$@"
-	else
-		fail "$@"
-		exit
-	fi
+	if $@ > /dev/null 2>&1; then ok "$@"
+	else fail "$@"; exit; fi
 }
 
+function check_create_dir() {
+	# If given directory ($1) exists print a warning,
+	# otherwise create that directory.
+	dirpath=$1
+	if [ -d $1 ]; then
+		warn "Directory $1 already exists"
+	else exec_cmd mkdir $1; fi
+}
 
 function create_config_file() {
 	# Create the config file at ~/.retro/config.txt
-	# Values for server address/port, fileserver port and server certificate
-	# must be entered by the user.
 
 	file=$1
 
-	echo
-	echo "To create the base config file ~/.retro/config.txt,"
-	echo "we need you to provide some information..."
-	echo
-	echo -n "Server address:  "; read serv_addr; if [ -z $serv_addr ]; then exit; fi
-	echo -n "Server port:     "; read serv_port; if [ -z $serv_port ]; then exit; fi
-	echo -n "Fileserver port: "; read fileserv_port; if [ -z $fileserv_port ]; then exit; fi
-	echo
-	echo "Please enter/copy the path to the server's certificate to copy it"
-	echo "to it's required location..."
-	echo -n "Server certfile: "; read serv_certfile; if [ -z $serv_certfile ]; then exit; fi
+	if [ -f $file ]; then
+		warn "File $file exists"
+		return
+	fi
 
-	# Create config file ...
 	echo "# This is the base configuration file of the retro client." > $file
 	echo "# Adjust these values that they fit your personal needs." >> $file
 	echo >> $file
 	echo "[default]" >> $file
 	echo "# Supported loglevels are ERROR,WARN,INFO,DEBUG" >> $file
 	echo "loglevel = INFO" >> $file
-	echo "# Logmessage format (see python logging module docs)" >> $file
-	echo "#logformat = '%(levelname)s  %(message)s'" >> $file
-	echo "# Logfile (default: ~/.retro/log.txt)" >> $file
-	echo "#logfile = /home/peilnix/.retro/log.txt" >> $file
-	echo "# Receive timeout in seconds (default: 5)" >> $file
+	echo "# Logfile" >> $file
+	echo "#logfile = $base/log.txt" >> $file
+	echo "# Receive timeout in seconds" >> $file
 	echo "#recv_timeout = 5" >> $file
 	echo >> $file
 	echo "[server]" >> $file
-	echo "# Retro server address (default 127.0.0.1)" >> $file
-	echo "address = $serv_addr" >> $file
-	echo "# Retro server port (default: 8443)" >> $file
+	echo "# Retro server address" >> $file
+	echo "address = $default_server_addr" >> $file
+	echo "# Retro server port" >> $file
 	echo "port = $serv_port" >> $file
-	echo "# Retroserver fileport (default: 8444)" >> $file
-	echo "fileport = $fileserv_port" >> $file
-	echo "# Path to server certfile (default: ~/.retro/server-cert.pem)" >> $file
-	echo "#certificate = $base/server-cert.pem" >> $file
-	echo "# CN (default: server-address)" >> $file
-	echo "#hostname = $serv_addr" >> $file
-	echo
+	echo "# Port for file transferring" >> $file
+	echo "fileport = $default_file_server_port" >> $file
+	echo "# Port for audio calls (still experimental)" >> $file
+	echo "audioport = $default_audio_server_port" >> $file
+	echo "# Server x509 certificate file" >> $file
+	echo "certificate = $base/server-cert.pem" >> $file
+	echo "# CN / server hostname" >> $file
+	echo "#hostname = $default_server_hostname" >> $file
 	ok "Created config file '$file'"
 }
 
 
-# Already installed?
-if [ -d $base ]; then
-	fail "Directory $base already exists!"
-	exit
-fi
 
-exec_cmd mkdir $base
-exec_cmd mkdir $base/accounts
-exec_cmd cp -r res $base/res
+# Install ...
+echo
+info "Installing retro-client ..."
+check_create_dir $base
+check_create_dir $base/accounts
+check_create_dir $base/bots
+
+if [ -d $base/res ]; then warn "Directory $base/res exists"
+else exec_cmd cp -r res $base/res; fi
+
 create_config_file $base/config.txt
-exec_cmd cp $serv_certfile $base/server-cert.pem
 
 
-
+echo
+echo -e "Please adjust the config file \033[1;33m~/.retro/config.txt\033[0m"
+echo -e "to your personal needs!"
+echo
+echo -e "Note that there must be a valid server certificate stored"
+echo -e "at \033[1;33m~/.retro/server-cert.pem\033[0m or at the path defined in"
+echo -e "the config file as '\033[1;33mcertificate\033[0m'."
+echo
