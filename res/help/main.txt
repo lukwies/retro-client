@@ -7,9 +7,6 @@
  **DOWN**        Select next friend
  **ENTER**       Open Conversation with selected friend
 
- **PAGE-UP**     Scroll log window up
- **PAGE-DOWN**   Scroll log window down
-
  **CTRL+H**      Show this helpview
  **CTRL+G**      Show settings
  **CTRL+R**      Connect to server
@@ -21,6 +18,9 @@
              incoming call.
  **CTRL+O**      Reject incoming, stop outgoing or hangup 
              active call.
+
+ **PAGE-UP**     Scroll log window up
+ **PAGE-DOWN**   Scroll log window down
 
 
  __**Info**__
