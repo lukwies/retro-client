@@ -92,25 +92,20 @@ class ChatMsgWindow:
 		Args:
 		  msg: Message dict
 		"""
-		def fmt_time(s):
-			dat  = s.split(' ')[0]
-			dat2 = time.strftime('%Y-%m-%d')
-			if dat == dat2:
-				return s.split()[1]
-			else:	return s
-
 
 		if msg['unseen'] == 1:
+			# If given message is "unseen" and there
+			# were no "unseen" messages yet, add an
+			# "unseen"-marker-line.
 			if self.num_unseen == 0:
-				# Mark beginning of unseen messages
 				self.lines.append("/U/U/U")
 				self.lines.append("")
 			self.num_unseen += 1
 
-		# Message start "SENDER (TIMESTAMP)"
+		# Add message header ("<sender> <msg-time>")
 		self.lines.append("/M/M/M{}/{}".format(
-				msg['from'],
-				fmt_time(msg['time']) ))
+			msg['from'],
+			self.__format_msgtime(msg['time']) ))
 
 		if msg['type'] == Proto.T_FILEMSG:
 			# File message
@@ -151,7 +146,7 @@ class ChatMsgWindow:
 		h,_ = self.gui.W['main'].getmaxyx()
 		boxh   = h-3
 		nlines = len(self.lines)
-		self.cy = 0 if nlines<boxh else nlines-boxh
+		self.cy = 0 if nlines<boxh else nlines-boxh-1
 		self.changed = True
 
 
@@ -163,7 +158,9 @@ class ChatMsgWindow:
 
 	def scroll_down(self):
 		""" Scroll down """
-		if self.cy < len(self.lines)-1:
+		h,_ = self.W.getmaxyx()
+
+		if self.cy < len(self.lines)-h+2:
 			self.cy += 1
 			self.changed = True
 
@@ -233,7 +230,7 @@ class ChatMsgWindow:
 		finally:
 			self.gui.winLock.release()
 
-	#--------------------------------------------------------------------------------
+	#-- PRIVATE ------------------------------------------------------
 
 	def __add_wrap_text(self, msg_text):
 		# Add message text to line list.
@@ -247,18 +244,8 @@ class ChatMsgWindow:
 		self.W.addstr(1, 1, " "*(w-2), self.gui.colors['Wb'])
 		self.W.addstr(1, 1, " Conversation with " + self.friend.name,
 			self.gui.colors['Wb']|curses.A_BOLD)
-
-		if self.num_unseen == 0:
-			s = "Messages=" + str(self.num_msgs) + " "
-			self.W.addstr(1, w-1-len(s), s, self.gui.colors['Wb'])
-		else:
-			s  = "Messages=" + str(self.num_msgs)
-			s2 = " new=" + str(self.num_unseen) + " "
-			self.W.addstr(1, w-1-len(s+s2), s,
-				self.gui.colors['Wb'])
-			self.W.addstr(1, w-1-len(s2), s2,
-				self.gui.colors['rb'])
-
+		s = str(self.num_msgs)
+		self.W.addstr(1, w-2-len(s), s, self.gui.colors['Wb'])
 
 
 	def __print_msg_header(self, y, line):
@@ -334,33 +321,56 @@ class ChatMsgWindow:
 				i += 1
 
 	def __draw_scrollbar(self, y, x, h):
+		"""\
+		Draw scrollbar at the right side of window.
+		"""
 
-		bar_y = int(self.cy * ((h-1) / len(self.lines)))
+		# Get max cursor y position
+		cymax = len(self.lines) - h - 1
+		if cymax < 0: cymax = 0
+
+		# Get scrollbar block position
+		bar_y = int(self.cy * ((h-1) / cymax))
+		if bar_y > h-3:	bar_y = h-3
 
 		self.W.addch(y, x, curses.ACS_UARROW, curses.A_BOLD)
 		self.W.addch(y+1+bar_y, x, curses.ACS_BLOCK, curses.A_DIM)
-#' ', curses.A_REVERSE)
 		self.W.addch(y+h-1, x, curses.ACS_DARROW, curses.A_BOLD)
-"""
-
--
-|
-|
-| h
-|
-|
--
 
 
+	def __format_msgtime(self, msg_time):
+		"""\
+		Get formatted time string from given
+		message time.
+		"""
+		tm  = time.strptime(msg_time, "%y-%m-%d %H:%M")
+		now = time.localtime()
 
+		if tm.tm_year != now.tm_year:
+			# Message is not from current year
+			return time.strftime("%m %b %Y %H:%M", tm)
 
+		elif tm.tm_mon != now.tm_mon:
+			# Message is not from current month
+			# Format: "12. May 20:32"
+			return time.strftime("%m %b %H:%M", tm)
 
+		# Message date is within current month...
+		daydiff = abs(tm.tm_mday - now.tm_mday)
 
+		if daydiff > 5:
+			# Message is older than 5 days
+			# Format: "12. May 20:32"
+			return time.strftime("%m %b %H:%M", tm)
+		elif daydiff > 1:
+			# Message is older than yesterday
+			# Format: "Monday 20:32"
+			return time.strftime("%A %H:%M", tm)
+		elif daydiff == 1:
+			# Message is from yesterday
+			# Format: "yesterday 20:32"
+			return time.strftime("yesterday %H:%M", tm)
 
-
-"""
-
-
-
-
+		# Message is from today
+		return time.strftime("%H:%M", tm)
 
