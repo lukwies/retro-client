@@ -101,10 +101,11 @@ def main():
 
 	# Init gui and run
 	gui = RetroGui()
-
-	if gui.load(user, passw):
-		gui.run()
-
+	try:
+		if gui.load(user, passw):
+			gui.run()
+	except Exception as e:
+		LOG.error(str(e))
 	return True
 
 
