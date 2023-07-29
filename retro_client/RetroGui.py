@@ -32,7 +32,6 @@ from . FriendsWindow   import FriendsWindow
 from . MainView        import MainView
 from . ChatView        import *
 from . RecvThread      import RecvThread
-from . FileTransfer    import *
 from . AudioCall       import AudioCall
 from . AudioCallWindow import AudioCallWindow
 from . AudioPlayer     import AudioPlayer
@@ -94,7 +93,6 @@ class RetroGui:
 		self.chatView        = None	# Chatview
 		self.audioCallWindow = None	# Window for audio calls
 
-		self.fileTransfer = None	# Filetransfer handler
 		self.audioCall    = None	# Audiocall handler
 		self.audioPlayer  = AudioPlayer(self)	# Audio player
 		self.evNotifier   = EventNotifier(self)	# Event notifier
@@ -668,7 +666,6 @@ class RetroGui:
 		# Init curses dependent view and window instances.
 		self.sidebar         = FriendsWindow(self)
 		self.mainView        = MainView(self)
-		self.fileTransfer    = FileTransfer(self)
 		self.audioCall       = AudioCall(self)
 		self.audioCallWindow = AudioCallWindow(self)
 #		self.audioPlayer     = AudioPlayer(self)

@@ -1,5 +1,6 @@
 import curses
 import logging
+from base64 import b64decode
 
 from libretro.RetroClient import RetroClient
 from libretro.protocol import Proto
@@ -10,8 +11,8 @@ from . ui.TextEditWindow import *
 from . ui.FileBrowseWindow import *
 from . ui.FileDownloadWindow import *
 
-#from InputWindow import InputWindow
 from . ChatMsgWindow import ChatMsgWindow
+from . filetrans import SendFileThread, RecvFileThread
 
 LOG = logging.getLogger(__name__)
 
@@ -70,7 +71,6 @@ class ChatView:
 		self.friend     = None	# Conversation partner
 		self.msgStore   = gui.cli.msgStore
 		self.msgHandler = gui.cli.msgHandler
-		self.fileTrans  = gui.fileTransfer
 
 
 	def load_chat(self, friend):
@@ -281,16 +281,9 @@ class ChatView:
 		self.redraw(True)
 
 		if filepath:
-			# Tell event notifier that we sent a file.
-			self.gui.evNotifier.on_sent_message(
-					self.friend.name,
-					is_filemsg=True)
-
-			# Upload file ...
-			thread = threading.Thread(
-				target=self.fileTrans.upload_file,
-				args=(self.friend,filepath))
-			thread.start()
+			t = SendFileThread(self.gui,
+				self.friend, filepath)
+			t.start()
 
 
 	def __file_download(self):
@@ -311,25 +304,19 @@ class ChatView:
 		self.redraw(True)
 
 		if msg:
-			# Download file ...
-			thread = threading.Thread(
-				target=self.fileTrans.download_file,
-				args=(self.friend,
-				      bytes.fromhex(msg['fileid']),
-				      msg['filename'],
-				      msg['key']))
-			thread.start()
+			t = RecvFileThread(self.gui,
+				self.friend,
+				msg['fileid'],
+				msg['filename'],
+				b64decode(msg['key']))
+			t.start()
 
 
 	def __handle_command(self, cmd):
 		# Handle user given command (starts with '/')
 		if cmd == "/help":
 			self.__help()
-
-		elif cmd.startswith("/sendfile"):
-			self.__file_upload()
-
-		elif cmd.startswith("/download"):
+		else:
 			#TODO
 			pass
 
