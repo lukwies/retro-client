@@ -1,7 +1,7 @@
 #!/bin/bash
 # ___ ___ ___ ___ ____
 # |_/ |_   |  |_/ |  |
-# | \ |___ |  | \ |__|
+# | \ |___ |  | \ |__| INSTALLER
 #
 # Creates the basic retro client directory tree.
 #
@@ -15,7 +15,6 @@
 #            |__ main.txt
 #
 # Usage: ./install.sh (BASEDIR)
-#
 #
 
 default_server_addr="127.0.0.1"
