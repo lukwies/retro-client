@@ -9,7 +9,7 @@ from . ui.TextWindow import *
 from . ui.DialogWindow import *
 from . ui.TextEditWindow import *
 from . ui.FileBrowseWindow import *
-from . ui.FileDownloadWindow import *
+#from . ui.FileDownloadWindow import *
 
 from . ChatMsgWindow import ChatMsgWindow
 from . filetrans import SendFileThread, RecvFileThread
@@ -129,6 +129,12 @@ class ChatView:
 				# Download file
 				self.__file_download()
 
+			
+			elif ch == self.keys['CTRL_K']:
+				# Delete message
+				self.__delete_message()
+			
+
 			elif ch == self.keys['CTRL_P']:
 				# If no audio call is running start one,
 				# otherwise let AudioCallWindow handle
@@ -220,6 +226,8 @@ class ChatView:
 		self.wIn.update_cursor()
 
 
+	# --- PRIVATE ------------------------------------------
+
 	def __send_msg(self, text):
 		"""\
 		Send message.
@@ -266,8 +274,10 @@ class ChatView:
 
 
 	def __file_upload(self):
-		# Opens a filebrowser and let user select file
-		# which later shall be sent to another client.
+		"""\
+		Opens a filebrowser and let user select file
+		which later shall be sent to another client.
+		"""
 		if not self.gui.connected:
 			self.gui.log_msg("Not connected to server",
 				error=True)
@@ -287,29 +297,49 @@ class ChatView:
 
 
 	def __file_download(self):
-		# Get all file messages and remove the once that are
-		# already downloaded.
-		msgs = self.msgStore.get_not_downloaded_files(
-				self.friend)
-		if not msgs:
-			# No files to download!
-			self.gui.log_msg("No files to download!", True)
+		"""\
+		Dowload file.
+		This will only work if selected message is a file
+		message and the file hasn't been downloaded yet.
+		"""
+		msg = self.wMsg.get_selected()
+		if not msg or msg['type'] != Proto.T_FILEMSG:
+			return
+		elif msg['downloaded']:
+			self.gui.log_msg("File was already downloaded",
+				error=True)
+			return
+		elif not self.gui.connected:
+			self.gui.log_msg("Not connected", error=True)
 			return
 
-		# Open window to let user select filename
-		win = FileDownloadWindow(self.W['main'],
-				self.gui.winLock, self.keys)
-		msg = win.select_file(msgs)
-
-		self.redraw(True)
-
-		if msg:
-			t = RecvFileThread(self.gui,
+		t = RecvFileThread(self.gui,
 				self.friend,
 				msg['fileid'],
 				msg['filename'],
 				b64decode(msg['key']))
-			t.start()
+		t.start()
+
+
+	def __delete_message(self):
+		"""\
+		Delete currently selected message.
+		"""
+		msg = self.wMsg.get_selected()
+		if not msg: return
+
+		dia = DialogWindow(
+			self.gui.stdscr,
+			self.gui.winLock,
+			self.gui.keys,
+			"Delete message?",
+			"Do you really want to delete that "\
+			"message? This can not be undone!",
+			["no", "yes"], "no")
+		res = dia.show()
+		if res == "yes":
+			# TODO Delete message from DB, redraw screen, ...
+			self.gui.log_msg("NOT IMPLEMENTED", error=True)
 
 
 	def __handle_command(self, cmd):
