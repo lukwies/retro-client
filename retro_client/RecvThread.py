@@ -150,7 +150,7 @@ class RecvThread(threading.Thread):
 
 		# Store message to sqlite db. Set unseen=1.
 		msg['unseen'] = 1
-		self.msgStore.add_msg(friend, msg)
+		msg['id'] = self.msgStore.add_msg(friend, msg)
 		friend.unseen_msgs += 1
 
 		if self.gui.chatView:
