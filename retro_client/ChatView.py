@@ -96,12 +96,9 @@ class ChatView:
 		self.gui.resize()
 		self.gui.log_msg("Press ^H for help")
 
-		# All these will lock self.gui.winLock
 		self.wIn.clear()
-#		self.wIn.redraw()
 		self.wMsg.reset_view()
 		self.redraw(True)
-#		self.wMsg.redraw(True)
 
 
 		while True:
@@ -129,11 +126,9 @@ class ChatView:
 				# Download file
 				self.__file_download()
 
-			
 			elif ch == self.keys['CTRL_K']:
 				# Delete message
 				self.__delete_message()
-			
 
 			elif ch == self.keys['CTRL_P']:
 				# If no audio call is running start one,
@@ -324,6 +319,7 @@ class ChatView:
 	def __delete_message(self):
 		"""\
 		Delete currently selected message.
+		Let user confirm before deleting...
 		"""
 		msg = self.wMsg.get_selected()
 		if not msg: return
@@ -333,13 +329,16 @@ class ChatView:
 			self.gui.winLock,
 			self.gui.keys,
 			"Delete message?",
-			"Do you really want to delete that "\
+			"Do you really want to delete this "\
 			"message? This can not be undone!",
 			["no", "yes"], "no")
 		res = dia.show()
+		self.wMsg.changed = True
+
 		if res == "yes":
-			# TODO Delete message from DB, redraw screen, ...
-			self.gui.log_msg("NOT IMPLEMENTED", error=True)
+			self.msgStore.delete_msg(self.friend, msg['id'])
+			self.wMsg.delete_selected()
+			self.gui.log_msg("Deleted message")
 
 
 	def __handle_command(self, cmd):

@@ -82,6 +82,21 @@ class ChatMsgWindow:
 		else:	return None
 
 
+	def delete_selected(self):
+		"""\
+		Delete currently selected message.
+		"""
+		msg_i = self.cy
+		msg_n = self.__selected_msg_nlines()
+
+		for i in range(msg_n+1):
+			self.lines.pop(msg_i)
+
+		if self.cy > len(self.lines):
+			self.cy = self.__prev_msg_index()
+		self.changed = True
+
+
 	def add_msg(self, msg):
 		"""\
 		Add message to line list.
@@ -240,7 +255,6 @@ class ChatMsgWindow:
 		"""
 		lines = msg_text.splitlines()
 		for line in lines:
-#			self.lines += self.tw.wrap(line)
 			for l in self.tw.wrap(line):
 				self.lines.append((None, l))
 
@@ -342,19 +356,19 @@ class ChatMsgWindow:
 		"""\
 		Draw scrollbar at the right side of window.
 		"""
-				
+		# TODO TODO
 		# Get max cursor y position
-		cymax = len(self.lines) - h - 1
-#		cymax = self.num_msgs - h - 1
-		if cymax < 0: cymax = 0
+		cymax = len(self.lines) #- h - 1
+		if cymax <= 0: cymax = 1
 
 		# Get scrollbar block position
 		bar_y = int(self.cy * ((h-1) / cymax))
-		if bar_y > h-3:	bar_y = h-3
+		if bar_y > h-3: bar_y = h-3
 
-		self.W.addch(y, x, curses.ACS_UARROW, curses.A_BOLD)
-		self.W.addch(y+1+bar_y, x, curses.ACS_BLOCK, curses.A_DIM)
-		self.W.addch(y+h-1, x, curses.ACS_DARROW, curses.A_BOLD)
+		if len(self.lines) > h-1:
+			self.W.addch(y, x, curses.ACS_UARROW, curses.A_BOLD)
+			self.W.addch(y+1+bar_y, x, curses.ACS_BLOCK, curses.A_DIM)
+			self.W.addch(y+h-1, x, curses.ACS_DARROW, curses.A_BOLD)
 
 
 	def __format_msgtime(self, msg_time):
@@ -464,14 +478,3 @@ class ChatMsgWindow:
 			self.vy = self.cy-h+nlines+1
 
 		self.changed = True
-"""
-0
-1 _____
-2  |		v0 = 2
-3  |		h  = 4
-4  |		cy = 6
-5 _|___
-6
-
-"""
-
