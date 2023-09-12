@@ -13,6 +13,7 @@ from . ui.FileBrowseWindow import *
 
 from . ChatMsgWindow import ChatMsgWindow
 from . filetrans import SendFileThread, RecvFileThread
+from . VoiceMsgWindow import VoiceMsgWindow
 
 LOG = logging.getLogger(__name__)
 
@@ -130,20 +131,24 @@ class ChatView:
 				# Delete message
 				self.__delete_message()
 
-			elif ch == self.keys['CTRL_P']:
-				# If no audio call is running start one,
-				# otherwise let AudioCallWindow handle
-				# the key.
-				if self.gui.audioCall.closed():
-					self.gui.start_call(self.friend)
-				else:
-					self.gui.audioCallWindow\
-						.handle_event(ch)
+			elif ch == self.keys['CTRL_V']:
+				# Open Voice message
+				self.__voice_message()
 
-			elif ch == self.keys['CTRL_O']:
-				# The key CTRL+O will be handled by the
-				# audio call window.
-				self.gui.audioCallWindow.handle_event(ch)
+#			elif ch == self.keys['CTRL_P']:
+#				# If no audio call is running start one,
+#				# otherwise let AudioCallWindow handle
+#				# the key.
+#				if self.gui.audioCall.closed():
+#					self.gui.start_call(self.friend)
+#				else:
+#					self.gui.audioCallWindow\
+#						.handle_event(ch)
+
+#			elif ch == self.keys['CTRL_O']:
+#				# The key CTRL+O will be handled by the
+#				# audio call window.
+#				self.gui.audioCallWindow.handle_event(ch)
 
 			elif ch == self.keys['ENTER']:
 				# Get text from input textfield and
@@ -203,7 +208,7 @@ class ChatView:
 		self.gui.print_topwin()
 		self.wMsg.redraw(force_redraw)
 		self.wIn.redraw()
-		self.gui.audioCallWindow.redraw(force_redraw)
+#		self.gui.audioCallWindow.redraw(force_redraw)
 
 	def reset_cursor(self):
 		""" Reset text edit cursor """
@@ -340,6 +345,15 @@ class ChatView:
 			self.wMsg.delete_selected()
 			self.gui.log_msg("Deleted message")
 
+
+	def __voice_message(self):
+		"""\
+		Open VoiceMsgWindow.
+		"""
+		vMW = VoiceMsgWindow(self.gui)
+		vMW.show()
+		self.wMsg.changed = True
+			
 
 	def __handle_command(self, cmd):
 		# Handle user given command (starts with '/')
