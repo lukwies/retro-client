@@ -9,7 +9,7 @@ from os.path import isdir    as path_isdir
 from os.path import splitext as path_splitext
 from threading import Lock
 
-from . FileDownloadWindow import filesize_to_string
+from libretro.FileTransfer import filesize_to_string
 
 
 """\
