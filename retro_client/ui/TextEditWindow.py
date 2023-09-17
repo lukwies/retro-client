@@ -76,7 +76,7 @@ class TextEditWindow:
 		elif ch == curses.KEY_LEFT:
 			self.__move_cursor(3)
 		elif ch == ord('\t'):
-			self.__preview_commands()
+			self.__add_char(' ')
 		else:
 			return
 		self.__adjust_view()
@@ -282,26 +282,3 @@ class TextEditWindow:
 			curses.A_REVERSE|curses.A_DIM)
 
 
-	def __preview_commands(self):
-		# TODO
-		self.commands = [
-			'/help',
-			'/delete-messages'
-		]
-
-		cmd = self.lines[0]
-		if not cmd: return
-
-		# Only single lines beginning with '/'
-		if self.cy != 0 or cmd[0] != '/' or ' ' in cmd:
-			return
-
-		self.lock.acquire()
-		try:
-			for i,c in enumerate(self.commands):
-				if cmd == c[:len(cmd)]:
-					self.W.addstr(3+i, 1, c)
-			self.W.refresh()
-			self.W.getch()
-		finally:
-			self.lock.release()
