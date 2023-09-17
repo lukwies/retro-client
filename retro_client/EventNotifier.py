@@ -1,6 +1,7 @@
 import plyer
 from plyer import notification
-from . ui.FileDownloadWindow import filesize_to_string
+
+from libretro.FileTransfer import filesize_to_string
 
 class EventNotifier:
 	"""\
@@ -13,8 +14,8 @@ class EventNotifier:
 	  'recv-filemessage'
 	  'sent-message'
 	  'sent-filemessage'
-	  'incoming-call'
-	  'outgoing-call'
+#	  'incoming-call'
+#	  'outgoing-call'
 	  'friend-online'
 	  'friend-offline'
 	"""
@@ -67,35 +68,35 @@ class EventNotifier:
 			else 'recv-message')
 
 
-	def on_incoming_call(self, friend_name, start=True):
-		"""\
-		Called if an incoming audio call is started
-		or ended. If the call started (start=True),
-		play the 'incoming-call' sound and raise a
-		desktop notification. If call ended, stop
-		the sound playing.
-		"""
-		if start:
-			self.aplay.play('incoming-call')
-			self.__notify(
-				title='Incoming call ...',
-				body=friend_name+' is calling you!',
-				img_name='incoming-call',
-				timeout=12)
-		else:	self.aplay.stop('incoming-call')
-
-
-	def on_outgoing_call(self, friend_name, start=True):
-		"""\
-		Called if an outgoing audio call is started
-		or ended. If the call started (start=True),
-		play the 'outgoing-call' sound, if it has
-		ended stop that sound again.
-		"""
-		if start:
-			self.aplay.play('outgoing-call',
-					n_times=99)
-		else:	self.aplay.stop('outgoing-call')
+#	def on_incoming_call(self, friend_name, start=True):
+#		"""\
+#		Called if an incoming audio call is started
+#		or ended. If the call started (start=True),
+#		play the 'incoming-call' sound and raise a
+#		desktop notification. If call ended, stop
+#		the sound playing.
+#		"""
+#		if start:
+#			self.aplay.play('incoming-call')
+#			self.__notify(
+#				title='Incoming call ...',
+#				body=friend_name+' is calling you!',
+#				img_name='incoming-call',
+#				timeout=12)
+#		else:	self.aplay.stop('incoming-call')
+#
+#
+#	def on_outgoing_call(self, friend_name, start=True):
+#		"""\
+#		Called if an outgoing audio call is started
+#		or ended. If the call started (start=True),
+#		play the 'outgoing-call' sound, if it has
+#		ended stop that sound again.
+#		"""
+#		if start:
+#			self.aplay.play('outgoing-call',
+#					n_times=99)
+#		else:	self.aplay.stop('outgoing-call')
 
 
 	def on_friend_status_changed(self, friend_name,

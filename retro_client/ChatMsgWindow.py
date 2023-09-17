@@ -2,26 +2,12 @@ import curses
 import textwrap
 import time
 
-
 from libretro.protocol import Proto
-from . ui.FileDownloadWindow import filesize_to_string
+from libretro.FileTransfer import filesize_to_string
 
 """\
-  Window for rendering chat messages.
-  The ChatMsgWindow is controlled by the ChatView class.
-
-
- +----------------------------------------------+
- | Conversation with r2d2			|
- +----------------------------------------------+
- | <r2d2> (2022-12-01 20:20)			|
- |  Hi There!					|
- |  peilnix (2022-12-01 21:30)			|
- |  Hey r2d2, how are you today?		|
- | ...						|
- |						|
- +----------------------------------------------+
-
+Window for printing chat messages.
+The ChatMsgWindow is controlled by the ChatView class.
 
 Internally the messages are stored as a list of lines.
 Each list item is a tuple, where index 0 only is set
@@ -33,14 +19,13 @@ if a line points to the beginning of a message.
 There are some special lines, determined by their prefix.
 
 A file info line:
-	/F/F/F<FILENAME>/<FILESIZE_STRING>/<DOWNLOADED>
+	"/F/F/F<FILENAME>/<FILESIZE_STRING>/<DOWNLOADED>"
 
 An 'unseen marker' (line between seen and unseen messages)
-starts with:
-	/U/U/U
+	"/U/U/U"
 
 A dimmed line starts with:
-	/D/D/D
+	"/D/D/D"
 
 """
 
@@ -356,7 +341,6 @@ class ChatMsgWindow:
 		"""\
 		Draw scrollbar at the right side of window.
 		"""
-		# TODO TODO
 		# Get max cursor y position
 		cymax = len(self.lines) #- h - 1
 		if cymax <= 0: cymax = 1
