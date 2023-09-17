@@ -7,7 +7,6 @@ import time
 from libretro.protocol import *
 from libretro.Friend import *
 
-
 LOG = logging.getLogger(__name__)
 
 
@@ -99,22 +98,6 @@ class RecvThread(threading.Thread):
 				# Incoming public key (add new friend)
 				self.__add_friend(pckt)
 
-			elif pckt[0] == Proto.T_START_CALL:
-				# Incoming phone call
-				self.__handle_incoming_call(pckt)
-
-			elif pckt[0] == Proto.T_STOP_CALL:
-				# Phone call was stopped
-				self.__handle_stop_call(pckt)
-
-			elif pckt[0] == Proto.T_REJECT_CALL:
-				# Phone call was rejected
-				self.__handle_reject_call(pckt)
-
-			elif pckt[0] == Proto.T_ACCEPT_CALL:
-				# Phone call has been accepted
-				self.__handle_accept_call(pckt)
-
 			elif pckt[0] == Proto.T_ERROR:
 				# Server error message
 				self.gui.error("Server: {}"\
@@ -182,7 +165,6 @@ class RecvThread(threading.Thread):
 		This will update the sidebar window since it shows
 		the online/offline state of a friend.
 		"""
-
 		friend_id  = pckt[1]
 		status_str = Proto.friend_status_str(pckt[0])
 
@@ -277,54 +259,3 @@ class RecvThread(threading.Thread):
 			friend_id = pckt[1][:8]
 			return self.cli.account.get_friend_by_id(friend_id)
 
-
-	def __handle_incoming_call(self, pckt):
-		"""\
-		Got incoming call.
-		"""
-		if not self.gui.audioCall.closed():
-			# If we are currently calling someone else,
-			# the incoming call will be rejected.
-			self.cli.send_packet(
-				Proto.T_REJECT_CALL,
-				pckt[1][8:16],	# from
-				pckt[1][:8])	# to
-			return
-
-		try:
-			friend,msg = self.msgHandler.decrypt_msg(
-					pckt[0], pckt[1])
-		except Exception as e:
-			self.gui.error("MsgHandler: "+str(e))
-			return
-
-			
-		self.gui.audioCall.on_incoming_call(
-			friend,
-			msg['callid'],
-			msg['callkey'])
-			
-
-	def __handle_stop_call(self, pckt):
-		"""\
-		Got 'stop-call'.
-		"""
-		friend = self.__get_friend_from_msg(pckt)
-		if friend:
-			self.gui.audioCall.on_call_stopped(friend)
-
-	def __handle_reject_call(self, pckt):
-		"""\
-		Got 'reject-call'.
-		"""
-		friend = self.__get_friend_from_msg(pckt)
-		if friend:
-			self.gui.audioCall.on_call_rejected(friend)
-
-	def __handle_accept_call(self, pckt):
-		"""\
-		Got 'accept-call'.
-		"""
-		friend = self.__get_friend_from_msg(pckt)
-		if friend:
-			self.gui.audioCall.on_call_accepted(friend)

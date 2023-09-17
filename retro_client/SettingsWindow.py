@@ -51,8 +51,6 @@ class SettingsWindow:
 			("Receive file message", "recv-filemessage"),
 			("Sent chat message", "sent-message"),
 			("Sent file message", "sent-filemessage"),
-			("Incoming call", "incoming-call"),
-			("Outgoing call", "outgoing-call"),
 			("Friend is online", "friend-online"),
 			("Friend is offline", "friend-offline")
 		]
@@ -61,7 +59,6 @@ class SettingsWindow:
 		self.notifyopts = [
 			("Receive chat message", "recv-message"),
 			("Receive file message", "recv-filemessage"),
-			("Incoming call", "incoming-call"),
 			("Friend is online", "friend-online"),
 			("Friend is offline", "friend-offline")
 		]

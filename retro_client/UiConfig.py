@@ -18,7 +18,6 @@ UiSettings uses the following files:
    |__ ui.conf
    |__ img/
    |   |__ recv-message.png
-   |   |__ incoming-call.png
    |   |__ friend-online.png
    |   |__ friend-offline.png
    |__ sounds/
@@ -26,8 +25,6 @@ UiSettings uses the following files:
        |__ sent-message.wav
        |__ recv-filemessage.wav
        |__ sent-filemessage.wav
-       |__ incoming-call.wav
-       |__ outgoing-call.wav
        |__ friend-online.wav
        |__ friend-offline.wav
 
@@ -38,8 +35,6 @@ UiSettings uses the following files:
   [sounds]
   recv-message = True
   sent-message = True
-  incoming-call = True
-  outgoing-call = True
   friend-online = True
   friend-offline = True
 
@@ -65,15 +60,12 @@ class UiConfig:
 			"recv-filemessage",
 			"sent-message",
 			"sent-filemessage",
-			"incoming-call",
-			"outgoing-call",
 			"friend-online",
 			"friend-offline" ]
 
 	# Used to access images
 	IMG_NAMES = [	"recv-message",
 			"recv-filemessage",
-			"incoming-call",
 			"friend-online",
 			"friend-offline" ]
 
@@ -87,11 +79,6 @@ class UiConfig:
 		self.sounddir = path_join(self.resdir, self.SOUNDDIR_NAME)
 		self.imgdir   = path_join(self.resdir, self.IMGDIR_NAME)
 		self.conffile = path_join(self.resdir, self.CONFFILE_NAME)
-
-		# [default]
-#		self.has_colors = True
-#		inputwin-height = 6
-
 
 		# [sounds]
 		# This dictionary is to keep track if a a sound
@@ -113,13 +100,6 @@ class UiConfig:
 		self.notify_enabled = True
 		self.notify_timeout = 5
 
-		# [windows]
-#		self.sidebar_width   = 40
-#		self.inputwin_height = 5
-
-		# [microphone]
-		#self.record_threshold =
-		#
 
 	def load(self):
 		"""\
