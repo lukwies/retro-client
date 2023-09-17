@@ -1,8 +1,9 @@
  **ENTER**              Send message
  **SHIFT+ENTER**        Add newline to message text
 
+ **CTRL+K**             Delete selected message
  **CTRL+F**             Upload/Send file
- **CTRL+D**             Download file(s)
+ **CTRL+D**             Download selected file
 
  **CTRL+X**             Close conversation
  **CTRL+H**             Show this helptext

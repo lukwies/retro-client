@@ -20,7 +20,6 @@
 default_server_addr="127.0.0.1"
 default_server_port=8443
 default_file_server_port=8444
-default_audio_server_port=8445
 default_server_hostname="example.org"
 
 
@@ -83,8 +82,6 @@ function create_config_file() {
 	echo "port = $serv_port" >> $file
 	echo "# Port for file transferring" >> $file
 	echo "fileport = $default_file_server_port" >> $file
-	echo "# Port for audio calls (still experimental)" >> $file
-	echo "audioport = $default_audio_server_port" >> $file
 	echo "# Server x509 certificate file" >> $file
 	echo "certificate = $base/server-cert.pem" >> $file
 	echo "# CN / server hostname" >> $file

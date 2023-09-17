@@ -8,16 +8,11 @@
  **ENTER**       Open Conversation with selected friend
 
  **CTRL+H**      Show this helpview
- **CTRL+G**      Show settings
+ **CTRL+G**      Show all settings
  **CTRL+R**      Connect to server
  **CTRL+F**      Add new friend to account
  **CTRL+D**      Delete selected friend (forever)
  **CTRL+X**      Close retro chat
-
- **CTRL+P**      Call currently selected friend or accept
-             incoming call.
- **CTRL+O**      Reject incoming, stop outgoing or hangup 
-             active call.
 
  **PAGE-UP**     Scroll log window up
  **PAGE-DOWN**   Scroll log window down
@@ -25,7 +20,7 @@
 
  __**Info**__
  
- All retro settings and account information is located
+ All retro settings and account information are located
  at ~/.retro. That directory has the following structure:
 
   ~/.retro/
@@ -36,12 +31,12 @@
      |   |   |-- key.pem
      |   |   |-- <userid>.pem
      |   |   |-- friends/
-     |   |   |   |-- friendid1.pem
-     |   |   |   |-- friendid2.pem
+     |   |   |   |-- <friendid1>.pem
+     |   |   |   |-- <friendid2>.pem
      |   |   |   |-- ...
      |   |   |-- msg/
-     |   |       |-- friendid1.db
-     |   |       |-- friendid2.db
+     |   |       |-- <friendid1>.db
+     |   |       |-- <friendid2>.db
      |   |       |-- ...
      |   |-- <user2>/
      |       |-- ...
@@ -51,5 +46,8 @@
      |   |   |-- main.txt
      |   |   |-- chat.txt
      |   |-- keyboard.json
+     |   |-- img/
+     |   |-- sounds/
+     |   |-- ui.conf
      |
      |-- server-cert.pem
