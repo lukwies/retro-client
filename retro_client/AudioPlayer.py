@@ -38,7 +38,7 @@ class AudioPlayer:
 		self._playingLock = threading.Lock()
 
 		# Interface to pyaudio
-		self._pyaudio = pyaudio.PyAudio()
+		self._pyaudio = gui.pyaudio
 
 
 	def load_sound_files(self):
