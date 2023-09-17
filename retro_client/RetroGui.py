@@ -23,7 +23,6 @@ from libretro.Account import get_all_accounts
 
 from . ui.Keyboard         import Keyboard
 from . ui.TextWindow       import TextWindow
-from . ui.FileBrowseWindow import FileBrowseWindow
 from . ui.EntryBoxWindow   import EntryBoxWindow
 from . ui.SelectOptionWindow import *
 
@@ -32,8 +31,6 @@ from . FriendsWindow   import FriendsWindow
 from . MainView        import MainView
 from . ChatView        import *
 from . RecvThread      import RecvThread
-#from . AudioCall       import AudioCall
-#from . AudioCallWindow import AudioCallWindow
 from . AudioPlayer     import AudioPlayer
 from . EventNotifier   import EventNotifier
 from . SettingsWindow  import SettingsWindow
