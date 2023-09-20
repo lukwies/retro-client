@@ -50,7 +50,6 @@ def main():
 	client = RetroClient()
 	user   = None
 
-
 	if not path_exists(client.conf.basedir):
 		print("Please install retro first")
 		return
@@ -101,11 +100,11 @@ def main():
 
 	# Init gui and run
 	gui = RetroGui()
-	try:
-		if gui.load(user, passw):
-			gui.run()
-	except Exception as e:
-		LOG.error(str(e))
+#	try:
+	if gui.load(user, passw):
+		gui.run()
+#	except Exception as e:
+#		LOG.error(str(e))
 	return True
 
 

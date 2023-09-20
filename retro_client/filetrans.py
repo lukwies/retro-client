@@ -9,7 +9,7 @@ from libretro.FileTransfer import filesize_to_string
 LOG = logging.getLogger(__name__)
 
 """\
-File Transmitting.
+Threads for filetransfer.
 
 """
 
@@ -39,8 +39,7 @@ class SendFileThread(threading.Thread):
 				.upload_file(self.friend,
 					self.filepath)
 		except Exception as e:
-			self.gui.error("Upload file: "+str(e),
-					on_logwin=True)
+			self.gui.error(str(e), on_logwin=True)
 			return
 
 		self.gui.info("Sent file to '"+self.friend.name+"'")
@@ -94,8 +93,7 @@ class RecvFileThread(threading.Thread):
 					self.key)
 
 		except Exception as e:
-			self.gui.error("Download file: "+str(e),
-					on_logwin=True)
+			self.gui.error(str(e), on_logwin=True)
 			return
 
 

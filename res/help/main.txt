@@ -7,12 +7,12 @@
  **DOWN**        Select next friend
  **ENTER**       Open Conversation with selected friend
 
- **CTRL+H**      Show this helpview
- **CTRL+G**      Show all settings
- **CTRL+R**      Connect to server
  **CTRL+F**      Add new friend to account
  **CTRL+D**      Delete selected friend (forever)
+ **CTRL+R**      Connect to server
  **CTRL+X**      Close retro chat
+ **CTRL+G**      Show all settings
+ **CTRL+H**      Show this helpview
 
  **PAGE-UP**     Scroll log window up
  **PAGE-DOWN**   Scroll log window down
@@ -28,16 +28,13 @@
      |
      |-- accounts/
      |   |-- <user1>/
-     |   |   |-- key.pem
-     |   |   |-- <userid>.pem
+     |   |   |-- account.db
      |   |   |-- friends/
-     |   |   |   |-- <friendid1>.pem
-     |   |   |   |-- <friendid2>.pem
-     |   |   |   |-- ...
-     |   |   |-- msg/
-     |   |       |-- <friendid1>.db
-     |   |       |-- <friendid2>.db
-     |   |       |-- ...
+     |   |       |-- friends.db
+     |   |       |-- msg/
+     |   |           |-- <db1>
+     |   |           |-- <db2>
+     |   |           |-- ...
      |   |-- <user2>/
      |       |-- ...
      |

@@ -69,7 +69,7 @@ class ChatMsgWindow:
 
 	def delete_selected(self):
 		"""\
-		Delete currently selected message.
+		Delete currently selected message from view.
 		"""
 		msg_i = self.cy
 		msg_n = self.__selected_msg_nlines()
@@ -85,9 +85,6 @@ class ChatMsgWindow:
 	def add_msg(self, msg):
 		"""\
 		Add message to line list.
-		If message is unseen and self.num_unseen == 0, we add the
-		string "/U/U/U" to the line list to mark the beginning of
-		unseen messages.
 		Args:
 		  msg: Message dict
 		"""
@@ -250,9 +247,6 @@ class ChatMsgWindow:
 		self.W.addstr(1, 1, " "*(w-2), self.gui.colors['Wb'])
 		self.W.addstr(1, 1, " Conversation with " + self.friend.name,
 			self.gui.colors['Wb']|curses.A_BOLD)
-#		s = "h={} vy={} cy={}".format(h, self.vy, self.cy)
-#		s = str(self.num_msgs)
-#		self.W.addstr(1, w-2-len(s)-1, s, self.gui.colors['Wb'])
 
 
 	def __print_msg_header(self, y, msg, is_selected):

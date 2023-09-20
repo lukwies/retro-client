@@ -48,9 +48,6 @@ class AudioPlayer:
 
 		Raise:
 		  Exception: If failed to load any sound
-		Return:
-		  True:  If soundfiles could be found
-		  False: If had any exceptions or no files found
 		"""
 
 		LOG.debug("Looking for sounds "\

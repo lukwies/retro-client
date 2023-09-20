@@ -36,7 +36,7 @@ class EventNotifier:
 		self.aplay.play('recv-message')
 		self.__notify(
 			title="Got message from "+friend_name,
-			body=body,
+			body="...",
 			img_name='recv-message', timeout=10)
 
 

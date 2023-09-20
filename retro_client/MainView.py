@@ -3,15 +3,9 @@ import time
 import logging
 import textwrap
 
-
 LOG = logging.getLogger(__name__)
 
-
 """\
- ___ ___ ___ ___ ____
- |_/ |_   |  |_/ |  |
- | \ |___ |  | \ |__|
-
 This window contains a topsection showing the logo
 and some information and a scroll text window holding
 all log messages.

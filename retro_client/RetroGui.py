@@ -546,8 +546,8 @@ class RetroGui:
 			self.error(str(e))
 			return
 
-		# Tell receive thread the friend's name that he
-		# knows it when receiving the response..
+		# Tell receivethread the friend's name that it's
+		# known when receiving the response..
 		self.recvThread.add_info('friendname', username)
 
 		# Send T_GET_PUBKEY request

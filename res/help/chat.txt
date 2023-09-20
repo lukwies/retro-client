@@ -1,14 +1,14 @@
  **ENTER**              Send message
  **SHIFT+ENTER**        Add newline to message text
 
+ **PAGE+UP**            Select previous message
+ **PAGE+DOWN**          Select next message
+
  **CTRL+K**             Delete selected message
  **CTRL+F**             Upload/Send file
  **CTRL+D**             Download selected file
 
  **CTRL+X**             Close conversation
  **CTRL+H**             Show this helptext
-
- **PAGE+UP**            Scroll messages up
- **PAGE+DOWN**          Scroll messages down
 
 
