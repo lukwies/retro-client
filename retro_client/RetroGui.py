@@ -31,7 +31,7 @@ from . FriendsWindow   import FriendsWindow
 from . MainView        import MainView
 from . ChatView        import *
 from . RecvThread      import RecvThread
-from . AudioPlayer     import AudioPlayer
+#from . AudioPlayer     import AudioPlayer
 from . EventNotifier   import EventNotifier
 from . SettingsWindow  import SettingsWindow
 
@@ -78,22 +78,20 @@ class RetroGui:
 		self.connected  = False		# Are we connected ?
 		self.recvThread = None		# Receive thread
 
-		self.uiconf  = UiConfig(self.conf) # UI Configs
-		self.stdscr  = None		# Curses std screen
-		self.W       = {}		# All curses windows
-		self.winLock = threading.Lock() # Window lock
-		self.colors  = {} 		# Ui colors
-		self.keys    = Keyboard()	# Keyboard keys/shortcuts
-		self.pyaudio = pyaudio.PyAudio() # Pyaudio interface
+		self.uiconf   = UiConfig(self.conf) # UI Configs
+		self.stdscr   = None		# Curses std screen
+		self.W        = {}		# All curses windows
+		self.winLock  = threading.Lock() # Window lock
+		self.colors   = {} 		# Ui colors
+		self.keys     = Keyboard()	# Keyboard keys/shortcuts
+		self.pyaudio  = pyaudio.PyAudio() # Pyaudio interface
 
-		self.sidebar         = None	# Sidebar
-		self.mainView        = None	# Mainview
-		self.chatView        = None	# Chatview
-#		self.audioCallWindow = None	# Window for audio calls
+		self.sidebar  = None	# Sidebar
+		self.mainView = None	# Mainview
+		self.chatView = None	# Chatview
 
-#		self.audioCall    = None	# Audiocall handler
-		self.audioPlayer  = AudioPlayer(self)	# Audio player
-		self.evNotifier   = EventNotifier(self)	# Event notifier
+#		self.audioPlayer = AudioPlayer(self)	# Audio player
+		self.evNotifier  = EventNotifier(self)	# Event notifier
 
 
 	def load(self, username, password):
@@ -125,7 +123,7 @@ class RetroGui:
 			# Load keyboard keys and shortcuts
 			kbpath = self.uiconf.res_path('keyboard.json')
 			self.keys.load_config(kbpath)
-			self.audioPlayer.load_sound_files()
+			#self.audioPlayer.load_sound_files()
 			return True
 
 		except Exception as e:
@@ -149,11 +147,6 @@ class RetroGui:
 			try:
 				ch = self.sidebar.getch()
 			except KeyboardInterrupt:
-#				if not self.audioCall.closed():
-#					self.error("Please finish "\
-#						"your call first")
-#					continue
-#				else: break
 				break
 
 			if ch == self.keys['ENTER']:
@@ -184,10 +177,6 @@ class RetroGui:
 
 			elif ch == self.keys['CTRL_X']:
 				# Quit retrochat
-#				if not self.audioCall.closed():
-#					self.error("Please finish "\
-#						"your call first")
-#				else:
 				break
 
 			elif ch == self.keys['CTRL_H']:
@@ -201,21 +190,6 @@ class RetroGui:
 			elif ch == self.keys['PDOWN']:
 				# Scroll log messages down
 				self.mainView.scroll_down()
-
-#			elif ch == self.keys['CTRL_O']:
-#				# Reject, stop, hangup audio call
-#				self.audioCallWindow.handle_event(ch)
-
-#			elif ch == self.keys['CTRL_P']:
-				# If there's an active call let the audio
-				# window handle the event, otherwise start
-				# a call to selected friend.
-#				if not self.audioCall.closed():
-#					self.audioCallWindow.handle_event(ch)
-#				else:
-#					friend = self.sidebar.get_selected()
-#					if friend:
-#						self.start_call(friend)
 
 			elif ch == curses.KEY_RESIZE:
 				# Resize window
@@ -262,7 +236,6 @@ class RetroGui:
 		else:
 			self.sidebar.redraw(force)
 			self.mainView.redraw(force)
-#			self.audioCallWindow.redraw(force)
 
 
 	def log_msg(self, text, error=False, show_sec=2):
@@ -338,12 +311,6 @@ class RetroGui:
 
 		h,w = self.stdscr.getmaxyx()
 
-		# Is there an audiocall currently?
-		# If there's an active audiocall we show the
-		# AudioCallWindow and need to eventually
-		# adjust the sidebar, main or main2 windows.
-#		is_call = not self.audioCall.closed()
-
 		if self.chatView:
 			# The chatview has no sidebar but two
 			# main windows (main,main2) placed on
@@ -365,13 +332,6 @@ class RetroGui:
 			main2_h = 0
 			main2_y = 0
 
-#		if is_call:
-			# If audioCallWindow is open, the main-
-			# height is 4 lines smaller.
-#			main_h  -= 4
-#			main2_y -= 4
-
-
 		self.winLock.acquire()
 		try:
 			[win.clear() for win in self.W.values()]
@@ -390,10 +350,6 @@ class RetroGui:
 				self.W['main2'].resize(main2_h, main_w)
 				self.W['main2'].mvwin(main2_y, main_x)
 
-#			if is_call:
-#				self.W['call'].resize(4, w)
-#				self.W['call'].mvwin(h-5, 0)
-
 			self.W['log'].resize(1, w)
 			self.W['log'].mvwin(h-1, 0)
 
@@ -405,32 +361,6 @@ class RetroGui:
 			self.winLock.release()
 
 		self.set_view_changed()
-
-
-#	def start_call(self, friend):
-#		"""\
-#		Start a call with given friend.
-#		"""
-#
-#		# Can only call friends that are online
-#		if friend.status != Friend.ONLINE:
-#			self.log_msg(friend.name+" is offline!",
-#				error=True)
-#			return
-#
-#		# Let user confirm before starting call
-#		dia = DialogWindow(self.stdscr,
-#				self.winLock, self.keys,
-#				"Start Audiocall ...",
-#				"Do you really want to call "\
-#				"your friend "+friend.name+"?",
-#				['no', 'yes'], 'yes')
-#		res = dia.show()
-#		self.set_view_changed()
-
-		# Start audiocall if user selected 'yes'
-#		if res == 'yes':
-#			self.audioCall.start_call(friend)
 
 
 	def set_view_changed(self):
@@ -651,11 +581,6 @@ class RetroGui:
 					h-2-self.W_MAIN2_H, self.W_LEFT_W)
 		self.W['main2'].keypad(True)
 
-		# The call window appears at the bottom part of the screen
-		# if there's an active call (!this.audioCall.closed()).
-#		self.W['call'] = curses.newwin(0,0,0,0)
-#		self.W['call'].keypad(True)
-
 		# Bottom window for showing log messages. This window has a
 		# blue background by default which may become while printing
 		# error messages.
@@ -667,9 +592,6 @@ class RetroGui:
 		# Init curses dependent view and window instances.
 		self.sidebar         = FriendsWindow(self)
 		self.mainView        = MainView(self)
-#		self.audioCall       = AudioCall(self)
-#		self.audioCallWindow = AudioCallWindow(self)
-#		self.audioPlayer     = AudioPlayer(self)
 
 
 class UnseenMsgCounter(threading.Thread):

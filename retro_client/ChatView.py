@@ -244,10 +244,6 @@ class ChatView:
 		self.wMsg.add_msg(msg)
 		self.wMsg.reset_view()
 
-		# Tell event notifier that we sent a message.
-		self.gui.evNotifier.on_sent_message(
-				self.friend.name,
-				is_filemsg=False)
 		return True
 
 

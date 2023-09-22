@@ -4,7 +4,7 @@ from setuptools import setup,find_packages
 
 setup(
 	name='retro-client',
-	version='0.1.0',
+	version='0.1.1',
 	description='end2end encrypted terminal messenger (client)',
 	url='https://github.com/lukwies/retro-client',
 	author='Lukas Wiese',

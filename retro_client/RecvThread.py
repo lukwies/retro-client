@@ -149,13 +149,10 @@ class RecvThread(threading.Thread):
 
 		# Execute message receive event
 		if pckt[0] == Proto.T_CHATMSG:
-			self.gui.evNotifier.on_recv_message(
-					friend.name)
+			self.gui.evNotifier.on_recv_message(friend)
 		elif pckt[0] == Proto.T_FILEMSG:
 			self.gui.evNotifier.on_recv_filemessage(
-					friend.name,
-					msg['filename'],
-					msg['size'])
+				friend, msg['filename'], msg['size'])
 
 
 	def __set_friend_status(self, pckt):
@@ -200,7 +197,7 @@ class RecvThread(threading.Thread):
 			# starting the retro-client.
 			if time.time() - self.start_time > 5:
 				self.gui.evNotifier.on_friend_status_changed(
-						friend.name, status_str)
+						friend, status_str)
 
 
 		# If we're in mainview, redraw the sidebar
